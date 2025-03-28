@@ -1,7 +1,8 @@
 import * as motion from "motion/react-client"
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Edit2, Trash2 } from 'lucide-react';
+import { EditUserModal } from './EditUserModal';
 
 
 interface User {
@@ -21,12 +22,40 @@ interface UserResponse {
 }
 
 export default function UsersList(){
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<User[]>(() => {
+        const savedUsers = localStorage.getItem('usersList');
+        return savedUsers ? JSON.parse(savedUsers) : [];
+    });
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
+    const [actionStatus, setActionStatus] = useState<{
+        type: 'success' | 'error';
+        message: string;
+    } | null>(null);
+    const [deletedUsers, setDeletedUsers] = useState<Set<number>>(() => {
+        const savedDeleted = localStorage.getItem('deletedUsers');
+        return new Set(savedDeleted ? JSON.parse(savedDeleted) : []);
+    });
+    const [editedUsers, setEditedUsers] = useState<Record<number, User>>(() => {
+        const savedEdits = localStorage.getItem('editedUsers');
+        return savedEdits ? JSON.parse(savedEdits) : {};
+    });
+
+    useEffect(() => {
+        localStorage.setItem('usersList', JSON.stringify(users));
+    }, [users]);
+
+    useEffect(() => {
+        localStorage.setItem('deletedUsers', JSON.stringify([...deletedUsers]));
+    }, [deletedUsers]);
+
+    useEffect(() => {
+        localStorage.setItem('editedUsers', JSON.stringify(editedUsers));
+    }, [editedUsers]);
 
     useEffect(() => {
         fetchUsers(currentPage);
@@ -48,8 +77,12 @@ export default function UsersList(){
                     },
                 }
             );
-            console.log(response);
-            setUsers(response.data.data);
+
+            const filteredUsers = response.data.data
+                .filter(user => !deletedUsers.has(user.id))
+                .map(user => editedUsers[user.id] || user);
+
+            setUsers(filteredUsers);
             setTotalPages(response.data.total_pages);
             setError(null);
         } catch (err) {
@@ -60,8 +93,103 @@ export default function UsersList(){
         }
     };
 
+    const handleEditUser = async (id: number, data: { first_name: string; last_name: string; email: string }) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No authentication token found');
+
+            const response = await axios.put(
+                `https://reqres.in/api/users/${id}`,
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                const updatedUser = { 
+                    ...users.find(u => u.id === id)!,
+                    ...data 
+                };
+                
+                setEditedUsers(prev => ({
+                    ...prev,
+                    [id]: updatedUser
+                }));
+
+                setUsers(users.map(user => 
+                    user.id === id ? updatedUser : user
+                ));
+
+                setActionStatus({
+                    type: 'success',
+                    message: 'User updated successfully'
+                });
+            } else {
+                throw new Error('Failed to update user');
+            }
+            
+            setTimeout(() => setActionStatus(null), 3000);
+        } catch (err) {
+            setActionStatus({
+                type: 'error',
+                message: err instanceof Error ? err.message : 'Failed to update user'
+            });
+            setTimeout(() => setActionStatus(null), 3000);
+            throw err;
+        }
+    };
+
+    const handleDeleteUser = async (id: number) => {
+        if (!window.confirm('Are you sure you want to delete this user?')) return;
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No authentication token found');
+
+            const response = await axios.delete(
+                `https://reqres.in/api/users/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.status === 204 || response.status === 200) {
+                setDeletedUsers(prev => new Set(prev).add(id));
+                
+                setUsers(users.filter(user => user.id !== id));
+
+                setActionStatus({
+                    type: 'success',
+                    message: 'User deleted successfully'
+                });
+            } else {
+                throw new Error('Failed to delete user');
+            }
+
+            setTimeout(() => setActionStatus(null), 3000);
+        } catch (err) {
+            setActionStatus({
+                type: 'error',
+                message: err instanceof Error ? err.message : 'Failed to delete user'
+            });
+            setTimeout(() => setActionStatus(null), 3000);
+        }
+    };
+
+    const clearStoredData = () => {
+        localStorage.removeItem('usersList');
+        localStorage.removeItem('deletedUsers');
+        localStorage.removeItem('editedUsers');
+    };
+
     return (
-        <div className="h-screen flex justify-center items-center bg-black px-8"> 
+        <div className="h-screen flex justify-center items-center bg-slate-900/90 px-8"> 
             <div className="flex flex-1 w-[180px] h-full flex-col">
                 <motion.div className="flex flex-1 top-12 text-slate-400 font-bold px-54 text-4xl justify-center mt-6 gap-2">
                     Employe Details
@@ -126,52 +254,83 @@ export default function UsersList(){
                 </motion.div>
             </div>
             <motion.div 
-                className="relative w-180 min-h-[42.5rem] bg-cyan-200/90 rounded-xl inset-shadow-sm inset-shadow-indigo-500"
+                className="relative w-180 min-h-[42.5rem] bg-cyan-200/90 rounded-xl inset-shadow-sm inset-shadow-indigo-500 "
                 whileHover={{
                     scale: 1.02,
                     transition: { duration: 0.2 }
                 }}
             >
                 {loading ? (
-                    <div className="flex justify-center items-center h-40">
+                    <div className="flex justify-center bottom items-center h-[44rem]">
                         <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
                     </div>
                 ) : error ? (
                     <div className="text-red-400 text-center">{error}</div>
                 ) : (
-                    <div className="absolute inset-0 h-full w-full bg-white rounded-xl divide-y">
-                        {users.map((user, index) => (
-                            <motion.div 
-                                key={user.id}
-                                className="flex gap-2 p-6 hover:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
-                                onMouseEnter={() => setHoveredIndex(index)}
-                                onMouseLeave={() => setHoveredIndex(null)}
-                                whileHover={{
-                                    scale: 1.05,
-                                }}
-                                transition={{
-                                    duration: 0.3,
-                                    ease: "easeInOut"
-                                }}
+                    <>
+                        {actionStatus && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className={`absolute top-4 right-4 p-3 rounded-lg ${
+                                    actionStatus.type === 'success' 
+                                        ? 'bg-green-500/20 text-green-400' 
+                                        : 'bg-red-500/20 text-red-400'
+                                }`}
                             >
-                                <div className="shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
-                                    <img
-                                        src={user.avatar}
-                                        alt={`${user.first_name} ${user.last_name}`}
-                                        className="w-16 h-16 rounded-full"
-                                    />
-                                </div>
-                                <div className="flex flex-col right-0">
-                                    <h2 className="text-lg font-semibold text-neutral-400 px-8 pt-4">
-                                        {user.first_name} {user.last_name}
-                                    </h2>
-                                    <p className="text-neutral-400 absolute pt-4 right-44">{user.email}</p>
-                                </div>
+                                {actionStatus.message}
                             </motion.div>
-                        ))}
-                    </div>
+                        )}
+                        <div className="absolute inset-0 h-full w-full bg-white rounded-xl divide-y divide-blue-400/40 hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)]">
+                            {users.map((user, index) => (
+                                <motion.div 
+                                    key={user.id}
+                                    className="flex items-center gap-2 p-6 hover:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
+                                    onMouseEnter={() => setHoveredIndex(index)}
+                                    onMouseLeave={() => setHoveredIndex(null)}
+                                    whileHover={{ scale: 1.02 }}
+                                >
+                                    <div className="shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
+                                        <img
+                                            src={user.avatar}
+                                            alt={`${user.first_name} ${user.last_name}`}
+                                            className="w-16 h-16 rounded-full"
+                                        />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h2 className="text-lg font-semibold text-neutral-400">
+                                            {user.first_name} {user.last_name}
+                                        </h2>
+                                        <p className="text-neutral-400">{user.email}</p>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => setEditingUser(user)}
+                                            className="p-2 rounded-lg bg-cyan-500/10 text-cyan-500 hover:bg-cyan-500/20"
+                                        >
+                                            <Edit2 size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteUser(user.id)}
+                                            className="p-2 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </>
                 )}
             </motion.div>
+
+            {editingUser && (
+                <EditUserModal
+                    user={editingUser}
+                    onClose={() => setEditingUser(null)}
+                    onSave={handleEditUser}
+                />
+            )}
         </div>
     )
 }
