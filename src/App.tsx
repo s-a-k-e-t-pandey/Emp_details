@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthScreen } from './components/AuthScreen';
 import { Suspense, lazy } from 'react';
 const UsersList = lazy(() => import('./components/UsersList'))
-// import { UsersList } from './components/UsersList';
 
 function App() {
     return (

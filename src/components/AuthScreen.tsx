@@ -111,7 +111,7 @@ export const AuthScreen = () => {
                                 transition={{ delay: 0.3 }}
                             >
                                 <div className="relative">
-                                    <User className="absolute left-3 top-3/2 -translate-y-1/2 h-5 w-5 text-cyan-400/60" />
+                                    <User className="absolute left-3 top-4/6 -translate-y-1/2 h-5 w-5 text-cyan-400/60" />
                                     <Input 
                                         label="Email"
                                         placeholder="Enter your email"
@@ -131,7 +131,7 @@ export const AuthScreen = () => {
                                 transition={{ delay: 0.4 }}
                             >
                                 <div className="relative">
-                                    <Lock className="absolute left-3 top-3/2 -translate-y-1/2 h-5 w-5 text-cyan-400/60" />
+                                    <Lock className="absolute left-3 top-4/6 -translate-y-1/2 h-5 w-5 text-cyan-400/60" />
                                     <Input 
                                         label="Password"
                                         placeholder="Enter your password"

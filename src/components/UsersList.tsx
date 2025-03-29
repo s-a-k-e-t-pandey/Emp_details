@@ -192,7 +192,7 @@ export default function UsersList(){
         <div className="h-screen flex justify-center items-center bg-slate-900/90 px-8"> 
             <div className="flex flex-1 w-[180px] h-full flex-col">
                 <motion.div className="flex flex-1 top-12 text-slate-400 font-bold px-54 text-4xl justify-center mt-6 gap-2">
-                    Employe Details
+                    Employee Details
                 </motion.div>
                 <div className="relative bottom-30 bg-neutral-200 h-[380px] left-48 w-[380px] rounded-xl border border-dashed inset-shadow-sm inset-shadow-indigo-500">
                     {hoveredIndex !== null && users[hoveredIndex] && (
