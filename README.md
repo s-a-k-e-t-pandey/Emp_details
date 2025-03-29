@@ -1,54 +1,123 @@
-# React + TypeScript + Vite
+# User Management Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application for managing user data with authentication, built with TypeScript and featuring a sleek UI design.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Authentication
+- Secure login system
+- JWT token-based authentication
+- Persistent session management
+- Animated login interface
+- Form validation
 
-## Expanding the ESLint configuration
+### User Management
+- View paginated list of users
+- Edit user information (first name, last name, email)
+- Delete users
+- Persistent state management
+- Real-time validation
+- Success/error notifications
+- Animated user interactions
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Technical Features
+- TypeScript support
+- Responsive design
+- Code splitting with lazy loading
+- Modern UI with animations
+- Form validation
+- API integration
+- Local storage persistence
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Technologies Used
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- React 18
+- TypeScript
+- React Router v6
+- Axios for API calls
+- TailwindCSS for styling
+- Motion for animations
+- Lucide React for icons
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Getting Started
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+- git clone <https://github.com/s-a-k-e-t-pandey/Emp_details>
+
+2. Install dependencies
+- npm install
+
+3. Start the development server
+- npm run dev
+
+
+## Usage
+
+### Login
+- Use the following credentials to log in:
+  - Email: `eve.holt@reqres.in`
+  - Password: `cityslicka`
+
+### User Management
+- View users list on the dashboard
+- Click edit icon to modify user details
+- Click delete icon to remove a user
+- Changes persist across sessions
+
+## API Integration
+
+The application uses the ReqRes API for demonstration:
+- Login: POST https://reqres.in/api/login
+- Users List: GET https://reqres.in/api/users
+- Update User: PUT https://reqres.in/api/users/{id}
+- Delete User: DELETE https://reqres.in/api/users/{id}
+
+## Project Structure
+
+src/
+├── components/
+│ ├── AuthScreen.tsx # Login component
+│ ├── UsersList.tsx # Users dashboard
+│ ├── EditUserModal.tsx # Edit user modal
+│ └── Input.tsx # Reusable input component
+├── App.tsx # Main application component
+└── index.tsx # Application entry point
+
+
+
+## Features in Detail
+
+### Authentication Screen
+- Modern gradient design
+- Animated form elements
+- Real-time validation
+- Success/error notifications
+- Smooth transitions
+
+### Users Dashboard
+- Paginated user list
+- Hover animations
+- Edit/Delete functionality
+- Persistent state
+- Success/error notifications
+- Smooth transitions between pages
+
+### Edit User Modal
+- Pre-filled form data
+- Real-time validation
+- Email format validation
+- Success/error handling
+- Animated transitions
+
+
+## Acknowledgments
+
+- ReqRes API for providing the test API
+- TailwindCSS for the styling system
+- Motion for the animation library

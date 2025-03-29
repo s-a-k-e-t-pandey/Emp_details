@@ -56,13 +56,6 @@ export const AuthScreen = () => {
         }
     }
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('usersList');
-        localStorage.removeItem('deletedUsers');
-        localStorage.removeItem('editedUsers');
-        navigate('/login');
-    };
 
     return (
         <div className="h-screen w-full flex items-center justify-center bg-black px-8">

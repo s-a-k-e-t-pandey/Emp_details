@@ -182,12 +182,6 @@ export default function UsersList(){
         }
     };
 
-    const clearStoredData = () => {
-        localStorage.removeItem('usersList');
-        localStorage.removeItem('deletedUsers');
-        localStorage.removeItem('editedUsers');
-    };
-
     return (
         <div className="h-screen flex justify-center items-center bg-slate-900/90 px-8"> 
             <div className="flex flex-1 w-[180px] h-full flex-col">
