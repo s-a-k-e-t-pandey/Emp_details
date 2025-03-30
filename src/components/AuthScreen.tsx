@@ -58,12 +58,12 @@ export const AuthScreen = () => {
 
 
     return (
-        <div className="h-screen w-full flex items-center justify-center bg-black px-8">
+        <div className="min-h-screen w-full flex items-center justify-center bg-black p-4 sm:p-8">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="w-full max-w-md"
+                className="w-full max-w-[380px] sm:max-w-md"
             >
                 <motion.form 
                     onSubmit={handleSubmit} 
@@ -73,7 +73,7 @@ export const AuthScreen = () => {
                     }}
                 >
                     <motion.div
-                        className="bg-slate-400/40 backdrop-blur-lg rounded-xl p-8 border border-cyan-500/20"
+                        className="bg-slate-400/40 backdrop-blur-lg rounded-xl p-4 sm:p-8 border border-cyan-500/20"
                     >
                         <motion.div 
                             className="absolute inset-0 -z-10 bg-gradient-to-br from-cyan-200/30 to-purple-200/30 blur-3xl"
@@ -89,7 +89,7 @@ export const AuthScreen = () => {
                         />
 
                         <motion.h2 
-                            className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent"
+                            className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent"
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}

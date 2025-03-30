@@ -183,12 +183,12 @@ export default function UsersList(){
     };
 
     return (
-        <div className="h-screen flex justify-center items-center bg-slate-900/90 px-8"> 
-            <div className="flex flex-1 w-[180px] h-full flex-col">
-                <motion.div className="flex flex-1 top-12 text-slate-400 font-bold px-54 text-4xl justify-center mt-6 gap-2">
+        <div className="min-h-screen flex flex-col lg:flex-row justify-center items-center bg-slate-900/90 p-4 sm:p-8"> 
+            <div className="flex flex-col w-full lg:w-[380px] mb-8 lg:mb-4 pr-24">
+                <motion.div className="text-slate-400 font-bold text-2xl sm:text-4xl text-center mb-6">
                     Employee Details
                 </motion.div>
-                <div className="relative bottom-30 bg-neutral-200 h-[380px] left-48 w-[380px] rounded-xl border border-dashed inset-shadow-sm inset-shadow-indigo-500">
+                <div className="relative bg-neutral-200 h-[280px] sm:h-[380px] w-full max-w-[380px] mx-auto rounded-xl border border-dashed border-indigo-500/50">
                     {hoveredIndex !== null && users[hoveredIndex] && (
                         <motion.div 
                             animate={{ opacity: 1 }}
@@ -231,7 +231,7 @@ export default function UsersList(){
                         </motion.div>
                     )}
                 </div>
-                <motion.div className="relative flex bottom-4 px-54 justify-center mt-6 gap-2">
+                <motion.div className="relative flex justify-center mt-6 gap-2 flex-wrap">
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                         <motion.button
                             key={page}
@@ -248,7 +248,7 @@ export default function UsersList(){
                 </motion.div>
             </div>
             <motion.div 
-                className="relative w-180 min-h-[42.5rem] bg-cyan-200/90 rounded-xl inset-shadow-sm inset-shadow-indigo-500 "
+                className="relative w-full lg:w-[680px] min-h-[400px] sm:min-h-[42.5rem] bg-cyan-200/90 rounded-xl shadow-lg"
                 whileHover={{
                     scale: 1.02,
                     transition: { duration: 0.2 }
@@ -275,29 +275,29 @@ export default function UsersList(){
                                 {actionStatus.message}
                             </motion.div>
                         )}
-                        <div className="absolute inset-0 h-full w-full bg-white rounded-xl divide-y divide-blue-400/40 hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)]">
+                        <div className="absolute inset-0 h-full w-full bg-white rounded-xl divide-y divide-blue-400/40 overflow-y-auto">
                             {users.map((user, index) => (
                                 <motion.div 
                                     key={user.id}
-                                    className="flex items-center gap-2 p-6 hover:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
+                                    className="flex flex-col sm:flex-row items-center gap-4 p-4 sm:p-6 hover:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
                                     onMouseEnter={() => setHoveredIndex(index)}
                                     onMouseLeave={() => setHoveredIndex(null)}
                                     whileHover={{ scale: 1.02 }}
                                 >
-                                    <div className="shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
+                                    <div className="shadow-lg">
                                         <img
                                             src={user.avatar}
                                             alt={`${user.first_name} ${user.last_name}`}
                                             className="w-16 h-16 rounded-full"
                                         />
                                     </div>
-                                    <div className="flex-1">
+                                    <div className="flex-1 text-center sm:text-left">
                                         <h2 className="text-lg font-semibold text-neutral-400">
                                             {user.first_name} {user.last_name}
                                         </h2>
                                         <p className="text-neutral-400">{user.email}</p>
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-2 mt-4 sm:mt-0">
                                         <button
                                             onClick={() => setEditingUser(user)}
                                             className="p-2 rounded-lg bg-cyan-500/10 text-cyan-500 hover:bg-cyan-500/20"

@@ -78,7 +78,7 @@ export const EditUserModal = ({ user, onClose, onSave }: EditUserModalProps) => 
                 initial={{ scale: 0.95 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.95 }}
-                className="bg-slate-800 rounded-xl p-6 w-full max-w-md relative"
+                className="bg-slate-800 rounded-xl p-4 sm:p-6 w-full max-w-[90%] sm:max-w-md relative"
             >
                 <button
                     onClick={onClose}
@@ -127,18 +127,18 @@ export const EditUserModal = ({ user, onClose, onSave }: EditUserModalProps) => 
                         </motion.p>
                     )}
 
-                    <div className="flex justify-end gap-2 mt-6">
+                    <div className="flex flex-col sm:flex-row justify-end gap-2 mt-6">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600"
+                            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500/80 to-teal-500/80 
+                            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500/80 to-teal-500/80 
                                      text-white hover:from-cyan-500/90 hover:to-teal-500/90 
                                      disabled:opacity-50 disabled:cursor-not-allowed"
                         >
